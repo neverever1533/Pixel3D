@@ -2,6 +2,10 @@
 
 图片生成3D体素模型。(image to 3d model object or voxel.)
 
+图示：
+
+![image](https://github.com/neverever1533/Pixel3D/blob/main/p3d_x2.png)
+
 
 ## 说明（about）：
 
