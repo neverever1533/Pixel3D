@@ -24,7 +24,7 @@
 read(File imageFileFront, File imageFileLeft, File imageFileUp){}
 ```
 
-分别读取3个方向（前，左和上）对应的png，扫描非透明部分以获取数据。
+分别读取3个方向（前，左和上，至少有其中1个）对应的png，扫描非透明部分以获取数据。
 
 * #### toObject()
 
