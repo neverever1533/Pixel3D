@@ -28,7 +28,8 @@
 setRightMode(boolean isRightMode){}
 ```
 
-为省去左右视图的翻转另存步骤，setRightMode(true)，read()导入的是右视图对应的png文件。
+为省去使用图形软件翻转左右视图，重新存储为png的步骤，替代为使用setRightMode(true)。（默认为左视图，填入true则对应着read(front, right, up)。）
+
 
 * #### read()
 
@@ -37,6 +38,7 @@ read(File imageFileFront, File imageFileLeft, File imageFileUp){}
 ```
 
 分别读取3个方向（即3视图：前，左和上，至少有其中1个）对应的png，扫描非透明部分以获取数据。
+
 
 * #### toObject()
 
@@ -51,6 +53,7 @@ toFullObject(File modelFile){}
 ```
 
 填入带路径的模型文件，则导出模型*.obj到文件（默认精简内部线面，仅保留最外层部分。toFullObject()得到的是未精简内部结构的体素模型）。
+
 
 ---
 
