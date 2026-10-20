@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class ModelTool {
+    private String info;
+
     private ImageTool imageTool = new ImageTool();
 
     private Model3D model3D = new Model3D();
@@ -22,6 +24,8 @@ public class ModelTool {
     private FileTool fileTool = new FileTool();
 
     private Point3DPlus[] array;
+
+    private boolean is_right_mode;
 
     private int[][] getArrays(BufferedImage image) {
         return imageTool.getArrays(image);
@@ -40,6 +44,7 @@ public class ModelTool {
     }
 
     public void read(int[][] arrayXZ, int[][] arrayYZ, int[][] arrayXY) {
+        model3D.setRightMode(isRightMode());
         setPointArray(model3D.read(arrayXZ, arrayYZ, arrayXY));
     }
 
@@ -47,13 +52,41 @@ public class ModelTool {
         return array;
     }
 
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setRightMode(boolean isRightMode) {
+        is_right_mode = isRightMode;
+    }
+
+    public boolean isRightMode() {
+        return is_right_mode;
+    }
+
     public void setPointArray(Point3DPlus[] array) {
         this.array = array;
     }
 
     public void toObject(File file) {
+        toObject(file, false);
+    }
+
+    public void toFullObject(File file) {
+        toObject(file, true);
+    }
+
+    private void toObject(File file, boolean isVoxelMode) {
         Point3DPlus[] array = getPointArray();
+        object3D.setInfo(getInfo());
         object3D.setPointArray(array);
+        object3D.setRightMode(isRightMode());
+        object3D.setVoxelMode(isVoxelMode);
+        object3D.setName(fileTool.getPrefix(file.getName()));
         fileTool.writeString(file, object3D.toString());
 //        System.out.println("mt58:" + array.length);
     }
