@@ -75,6 +75,11 @@ pixel3D.read(imageFileFront, imageFileLeft, imageFileUp);
 pixel3D.toObject(modelFile);
 ```
 
+
+### 注意：
+1. 手绘像素图使用效果最佳，若是通过图形软件缩小后的png，需手动清理遭破坏的半透明轮廓！
+2. 测试128x128像素尺寸的png图片填入read(image, image, image)后，使用toObject(file)和toFullObject(file)获取*.obj的用时较快，当尺寸超过256x256像素以后结果受硬件性能影响。（不建议使用256像素或更大的尺寸。）
+
  
 ## 其他（Other）：
 
