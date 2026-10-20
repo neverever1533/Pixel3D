@@ -72,8 +72,8 @@ pixel3D.read(imageFileFront, imageFileLeft, imageFileUp);
 pixel3D.toObject(modelFile);
 ```
 
-
-## 其他
+ 
+## 其他（Other）：
 
 该项目是本人很久很久前做的图生模型工具，因保存源程序和代码的硬件已损坏故此重制。
 
