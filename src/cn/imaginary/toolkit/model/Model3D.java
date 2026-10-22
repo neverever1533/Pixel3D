@@ -8,24 +8,25 @@ import javaxev.vecmath.Point3DPlus;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Model3D {
-    private boolean is_right_mode;
+    private boolean is_mode_right;
 
     private int length_x;
     private int length_y;
     private int length_z;
 
-    private Point3DPlus[] array;
+    private ArrayList<Point3DPlus> arrayList;
 
     private ImageTool imageTool = new ImageTool();
 
     public void setRightMode(boolean isRightMode) {
-        is_right_mode = isRightMode;
+        is_mode_right = isRightMode;
     }
 
     public boolean isRightMode() {
-        return is_right_mode;
+        return is_mode_right;
     }
 
     public int getXLength() {
@@ -52,12 +53,16 @@ public class Model3D {
         length_z = length;
     }
 
-    public Point3DPlus[] getPointArray() {
-        return array;
+    public ArrayList<Point3DPlus> getPointList() {
+        return arrayList;
     }
 
-    public void setPointArray(Point3DPlus[] array) {
-        this.array = array;
+    public void setPointList(ArrayList<Point3DPlus> arrayList) {
+        this.arrayList = arrayList;
+    }
+
+    public void setPointList(Point3DPlus[] array) {
+        setPointList(ListTool.toList(array));
     }
 
     private int[][] getRGBArrays(BufferedImage image) {
@@ -66,15 +71,14 @@ public class Model3D {
 
     public void read(BufferedImage imageXZ, BufferedImage imageYZ, BufferedImage imageXY) {
         update(imageXZ, imageYZ, imageXY);
-        Point3DPlus[] array = read(getRGBArrays((imageXZ)), getRGBArrays(imageYZ), getRGBArrays(imageXY));
-        setPointArray(array);
+        setPointList(read(getRGBArrays((imageXZ)), getRGBArrays(imageYZ), getRGBArrays(imageXY)));
     }
 
     public void read(File imageFileXZ, File imageFileYZ, File imageFileXY) {
         read(imageTool.read(imageFileXZ), imageTool.read(imageFileYZ), imageTool.read(imageFileXY));
     }
 
-    private Point3DPlus[] read(int[][] arrayXZ, int[][] arrayYZ, int[][] arrayXY) {
+    private ArrayList<Point3DPlus> read(int[][] arrayXZ, int[][] arrayYZ, int[][] arrayXY) {
         int len_x = getXLength();
         int len_y = getYLength();
         int len_z = getZLength();
@@ -137,7 +141,42 @@ public class Model3D {
             }
         }
         System.out.println("m3d138:scan vertices done!");
-        return ListTool.toArray(arrayList);
+        return arrayList;
+    }
+
+    public ArrayList<Point3DPlus> update(ArrayList<Point3DPlus> arrayList, boolean isVoxelMode) {
+        if (null != arrayList) {
+            if (!isVoxelMode) {
+                ArrayList<Point3DPlus> alist = new ArrayList<>();
+                for (Iterator<Point3DPlus> iterator = arrayList.iterator(); iterator.hasNext(); ) {
+                    Point3DPlus p = iterator.next();
+                    if (null != p) {
+                        Point3DPlus p_f = new Point3DPlus(p.x, p.y - 1, p.z);
+                        Point3DPlus p_b = new Point3DPlus(p.x, p.y + 1, p.z);
+                        Point3DPlus p_l = new Point3DPlus(p.x - 1, p.y, p.z);
+                        Point3DPlus p_r = new Point3DPlus(p.x + 1, p.y, p.z);
+                        Point3DPlus p_u = new Point3DPlus(p.x, p.y, p.z + 1);
+                        Point3DPlus p_d = new Point3DPlus(p.x, p.y, p.z - 1);
+                        Point3DPlus p_ws_u = new Point3DPlus(p.x - 1, p.y - 1, p.z + 1);
+                        Point3DPlus p_ws_d = new Point3DPlus(p.x - 1, p.y - 1, p.z - 1);
+                        Point3DPlus p_wn_u = new Point3DPlus(p.x - 1, p.y + 1, p.z + 1);
+                        Point3DPlus p_wn_d = new Point3DPlus(p.x - 1, p.y + 1, p.z - 1);
+                        Point3DPlus p_es_u = new Point3DPlus(p.x + 1, p.y - 1, p.z + 1);
+                        Point3DPlus p_es_d = new Point3DPlus(p.x + 1, p.y - 1, p.z - 1);
+                        Point3DPlus p_en_u = new Point3DPlus(p.x + 1, p.y + 1, p.z + 1);
+                        Point3DPlus p_en_d = new Point3DPlus(p.x + 1, p.y + 1, p.z - 1);
+                        if (!ListTool.contains(arrayList, p_f) || !ListTool.contains(arrayList, p_b) || !ListTool.contains(arrayList, p_l)
+                                || !ListTool.contains(arrayList, p_r) || !ListTool.contains(arrayList, p_u) || !ListTool.contains(arrayList, p_d)
+                                || !ListTool.contains(arrayList, p_ws_u) || !ListTool.contains(arrayList, p_ws_d) || !ListTool.contains(arrayList, p_wn_u) || !ListTool.contains(arrayList, p_wn_d)
+                                || !ListTool.contains(arrayList, p_es_u) || !ListTool.contains(arrayList, p_es_d) || !ListTool.contains(arrayList, p_en_u) || !ListTool.contains(arrayList, p_en_d)) {
+                            alist.add(p);
+                        }
+                    }
+                }
+                return alist;
+            }
+        }
+        return arrayList;
     }
 
     private void update(BufferedImage imageXZ, BufferedImage imageYZ, BufferedImage imageXY) {
