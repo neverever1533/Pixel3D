@@ -8,10 +8,11 @@ import javaxev.vecmath.Point3DPlus;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Pixel3D {
     private String name = "Pixel3D";
-    private String version = "v0.7.2";
+    private String version = "v0.8.1";
     private String tag_sharp = "#";
     private String tag_space = " ";
 
@@ -42,9 +43,12 @@ public class Pixel3D {
     }
 
     private void toObject(File file, boolean isVoxelMode) {
-        Point3DPlus[] array = model3D.getPointArray();
+        ArrayList<Point3DPlus> arrayList = model3D.getPointList();
         object3D.setInfo(tag_sharp + tag_space + name + tag_space + version);
-        object3D.setPointArray(array);
+        int size = arrayList.size();
+        arrayList = model3D.update(arrayList, isVoxelMode);
+        System.out.println("p3d50 toString:is voxel mode:" + isVoxelMode + "/size:" + arrayList.size() + "/" + size);
+        object3D.setPointList(arrayList);
         object3D.setRightMode(model3D.isRightMode());
         object3D.setVoxelMode(isVoxelMode);
         object3D.setName(fileTool.getPrefix(file.getName()));
