@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 public class Object3D {
     private boolean is_mode_voxel;
-    private boolean is_right_mode;
+    private boolean is_mode_right;
 
     private String tag_cube = "cube_";
     private String tag_line_separator = System.lineSeparator();
@@ -62,7 +62,7 @@ public class Object3D {
     private String tag_curve_approximation_technique = "ctech";
     private String tag_surface_approximation_technique = "stech";
 
-    private Point3DPlus[] array;
+    private ArrayList<Point3DPlus> arrayList;
 
     public void setVoxelMode(boolean isVoxelMode) {
         is_mode_voxel = isVoxelMode;
@@ -73,11 +73,11 @@ public class Object3D {
     }
 
     public void setRightMode(boolean isRightMode) {
-        is_right_mode = isRightMode;
+        is_mode_right = isRightMode;
     }
 
     public boolean isRightMode() {
-        return is_right_mode;
+        return is_mode_right;
     }
 
     public void setName(String name) {
@@ -96,12 +96,16 @@ public class Object3D {
         return info;
     }
 
-    public Point3DPlus[] getPointArray() {
-        return array;
+    public ArrayList<Point3DPlus> getPointList() {
+        return arrayList;
     }
 
-    public void setPointArray(Point3DPlus[] array) {
-        this.array = array;
+    public void setPointList(ArrayList<Point3DPlus> arrayList) {
+        this.arrayList = arrayList;
+    }
+
+    public void setPointList(Point3DPlus[] array) {
+        arrayList = ListTool.toList(array);
     }
 
     private void addVertices(ArrayList<Point3DPlus> arrayList, StringBuilder stringBuilder) {
@@ -256,50 +260,8 @@ public class Object3D {
         }
     }
 
-    public ArrayList<Point3DPlus> updatePointArray(ArrayList<Point3DPlus> arrayList) {
-        if (null != arrayList) {
-            if (!isVoxelMode()) {
-                ArrayList<Point3DPlus> alist = new ArrayList<>(arrayList);
-                for (Iterator<Point3DPlus> iterator = arrayList.iterator(); iterator.hasNext(); ) {
-                    Point3DPlus p = iterator.next();
-                    if (null != p) {
-                        Point3DPlus p_f = getPoint3D(p.x, p.y - 1, p.z);
-                        Point3DPlus p_b = getPoint3D(p.x, p.y + 1, p.z);
-                        Point3DPlus p_l = getPoint3D(p.x - 1, p.y, p.z);
-                        Point3DPlus p_r = getPoint3D(p.x + 1, p.y, p.z);
-                        Point3DPlus p_u = getPoint3D(p.x, p.y, p.z + 1);
-                        Point3DPlus p_d = getPoint3D(p.x, p.y, p.z - 1);
-                        Point3DPlus p_ws_u = getPoint3D(p.x - 1, p.y - 1, p.z + 1);
-                        Point3DPlus p_ws_d = getPoint3D(p.x - 1, p.y - 1, p.z - 1);
-                        Point3DPlus p_wn_u = getPoint3D(p.x - 1, p.y + 1, p.z + 1);
-                        Point3DPlus p_wn_d = getPoint3D(p.x - 1, p.y + 1, p.z - 1);
-                        Point3DPlus p_es_u = getPoint3D(p.x + 1, p.y - 1, p.z + 1);
-                        Point3DPlus p_es_d = getPoint3D(p.x + 1, p.y - 1, p.z - 1);
-                        Point3DPlus p_en_u = getPoint3D(p.x + 1, p.y + 1, p.z + 1);
-                        Point3DPlus p_en_d = getPoint3D(p.x + 1, p.y + 1, p.z - 1);
-                        if (ListTool.contains(arrayList, p_f) && ListTool.contains(arrayList, p_b) && ListTool.contains(arrayList, p_l)
-                                && ListTool.contains(arrayList, p_r) && ListTool.contains(arrayList, p_u) && ListTool.contains(arrayList, p_d)
-                                && ListTool.contains(arrayList, p_ws_u) && ListTool.contains(arrayList, p_ws_d) && ListTool.contains(arrayList, p_wn_u) && ListTool.contains(arrayList, p_wn_d)
-                                && ListTool.contains(arrayList, p_es_u) && ListTool.contains(arrayList, p_es_d) && ListTool.contains(arrayList, p_en_u) && ListTool.contains(arrayList, p_en_d)) {
-                            alist.remove(p);
-                        }
-                    }
-                }
-                return alist;
-            }
-        }
-        return arrayList;
-    }
-
-    private Point3DPlus getPoint3D(int x, int y, int z) {
-        return new Point3DPlus(x, y, z);
-    }
-
     public String toString() {
-        ArrayList<Point3DPlus> arrayList = ListTool.toList(getPointArray());
-        int size = arrayList.size();
-        arrayList = updatePointArray(arrayList);
-        System.out.println("o3d310 toString:is voxel mode:" + isVoxelMode() + "/size:" + arrayList.size() + "/" + size);
+        ArrayList<Point3DPlus> arrayList = getPointList();
         StringBuilder stringBuilder = new StringBuilder();
         addVertices(arrayList, stringBuilder);
         stringBuilder.append(tag_line_separator);
