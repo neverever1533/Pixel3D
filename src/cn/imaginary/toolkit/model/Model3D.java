@@ -65,49 +65,42 @@ public class Model3D {
         setPointList(ListTool.toList(array));
     }
 
-    private int[][] getRGBArrays(BufferedImage image) {
-        return imageTool.getArrays(image);
-    }
-
     public void read(BufferedImage imageXZ, BufferedImage imageYZ, BufferedImage imageXY) {
         update(imageXZ, imageYZ, imageXY);
-        setPointList(read(getRGBArrays((imageXZ)), getRGBArrays(imageYZ), getRGBArrays(imageXY)));
+        setPointList(readVertices(imageXZ, imageYZ, imageXY));
     }
 
     public void read(File imageFileXZ, File imageFileYZ, File imageFileXY) {
         read(imageTool.read(imageFileXZ), imageTool.read(imageFileYZ), imageTool.read(imageFileXY));
     }
 
-    private ArrayList<Point3DPlus> read(int[][] arrayXZ, int[][] arrayYZ, int[][] arrayXY) {
+    private ArrayList<Point3DPlus> readVertices(BufferedImage imageXZ, BufferedImage imageYZ, BufferedImage imageXY) {
         int len_x = getXLength();
         int len_y = getYLength();
         int len_z = getZLength();
+        if (len_x == 0 || len_y == 0 || len_z == 0) {
+            return null;
+        }
         int[][] arrXZ = null;
-        if (null != arrayXZ) {
-            if (len_y == 0) {
-                len_y = Math.min(len_x, len_z);
-            }
+        if (null != imageXZ) {
             arrXZ = new int[len_x][len_z];
             for (int x = 0; x < len_x; x++) {
                 for (int z = 0; z < len_z; z++) {
-                    arrXZ[x][z] = arrayXZ[x][len_z - 1 - z];
+                    arrXZ[x][z] = imageXZ.getRGB(x, len_z - 1 - z);
                 }
             }
         }
         System.out.println("m3d92:scan xy done!");
 
         int[][] arrYZ = null;
-        if (null != arrayYZ) {
-            if (len_x == 0) {
-                len_x = Math.min(len_y, len_z);
-            }
+        if (null != imageYZ) {
             arrYZ = new int[len_y][len_z];
             for (int y = 0; y < len_y; y++) {
                 for (int z = 0; z < len_z; z++) {
                     if (isRightMode()) {
-                        arrYZ[y][z] = arrayYZ[y][len_z - 1 - z];
+                        arrYZ[y][z] = imageYZ.getRGB(y, len_z - 1 - z);
                     } else {
-                        arrYZ[y][z] = arrayYZ[len_y - 1 - y][len_z - 1 - z];
+                        arrYZ[y][z] = imageYZ.getRGB(len_y - 1 - y, len_z - 1 - z);
                     }
                 }
             }
@@ -115,14 +108,11 @@ public class Model3D {
         System.out.println("m3d110:scan yz done!");
 
         int[][] arrXY = null;
-        if (null != arrayXY) {
-            if (len_z == 0) {
-                len_z = Math.min(len_x, len_y);
-            }
+        if (null != imageXY) {
             arrXY = new int[len_x][len_y];
             for (int x = 0; x < len_x; x++) {
                 for (int y = 0; y < len_y; y++) {
-                    arrXY[x][y] = arrayXY[x][len_y - 1 - y];
+                    arrXY[x][y] = imageXY.getRGB(x, len_y - 1 - y);
                 }
             }
         }
