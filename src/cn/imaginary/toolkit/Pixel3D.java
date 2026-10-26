@@ -30,6 +30,10 @@ public class Pixel3D {
         model3D.read(imageFileXZ, imageFileYZ, imageFileXY);
     }
 
+    public void write(File file, String objString) {
+        fileTool.writeString(file, objString);
+    }
+
     public void setRightMode(boolean isRightMode) {
         model3D.setRightMode(isRightMode);
     }
@@ -44,6 +48,9 @@ public class Pixel3D {
 
     private void toObject(File file, boolean isVoxelMode) {
         ArrayList<Point3DPlus> arrayList = model3D.getPointList();
+        if (null == arrayList) {
+            return;
+        }
         object3D.setInfo(tag_sharp + tag_space + name + tag_space + version);
         int size = arrayList.size();
         arrayList = model3D.update(arrayList, isVoxelMode);
@@ -52,7 +59,7 @@ public class Pixel3D {
         object3D.setRightMode(model3D.isRightMode());
         object3D.setVoxelMode(isVoxelMode);
         object3D.setName(fileTool.getPrefix(file.getName()));
-        fileTool.writeString(file, object3D.toString());
+        write(file, object3D.toString());
 //        System.out.println("p3d53:" + array.length);
     }
 
