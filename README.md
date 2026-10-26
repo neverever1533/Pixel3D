@@ -14,6 +14,7 @@
 
 ### 项目进度：
 - [x] vertices
+- [ ] texture
 - [x] cube
 - [x] wavefront
 - [ ] voxel
