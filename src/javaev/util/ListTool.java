@@ -18,7 +18,7 @@ public class ListTool {
         return (int) check(arrayList, Point3DPlus, type_index);
     }
 
-    public static Object check(ArrayList<Point3DPlus> arrayList, Point3DPlus Point3DPlus, int type) {
+    private static Object check(ArrayList<Point3DPlus> arrayList, Point3DPlus Point3DPlus, int type) {
         if (null != arrayList && null != Point3DPlus) {
             for (int i = 0; i < arrayList.size(); i++) {
                 Point3DPlus p = arrayList.get(i);
