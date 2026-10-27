@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Pixel3D {
     private String name = "Pixel3D";
-    private String version = "v0.8.1";
+    private String version = "v0.8.2";
     private String tag_sharp = "#";
     private String tag_space = " ";
 
